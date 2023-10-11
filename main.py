@@ -1,12 +1,35 @@
 """
-Main script for using search method that uses the Boyer-Moore-Horspool algorithm in terminal
-
+Savelev Aleksandr КИ22-16\1б
+Variant 5 Boyer-Moore-Horspool algorithm
 """
 import argparse
 import hashlib
-from typing import Dict, Union
+import time
+from typing import Dict, Union, Callable, Any
 from colorama import init
 from search import search
+
+
+def timer(func: Callable[..., Any]) -> Callable[..., Any]:
+    """
+    A decorator to measure and log the execution time of a function.
+
+    Args:
+        func (callable): The function to be measured.
+
+    Returns:
+        callable: A wrapped function that logs the execution time.
+    """
+
+    def wrapper(*args, **kwargs):
+        start_time = time.time()
+        result = func(*args, **kwargs)
+        end_time = time.time()
+        execution_time = end_time - start_time
+        print(f"Execution time: {execution_time:.4f} seconds")
+        return result
+
+    return wrapper
 
 
 def find_key_by_value(dictionary: Dict[str, Union[tuple, None]], target_value: int) -> str | None:
@@ -26,6 +49,7 @@ def find_key_by_value(dictionary: Dict[str, Union[tuple, None]], target_value: i
     return None
 
 
+@timer
 def main():
     """
     Main function for using the search method that uses the Boyer-Moore-Horspool algorithm in the terminal.
@@ -64,7 +88,7 @@ def main():
         for pos in flattened_list:
             key = find_key_by_value(filtered_dict, pos)
             seed = int(hashlib.sha256(key.encode()).hexdigest(), 16)
-            color_number = seed % 7 + 31
+            color_number = seed % 6 + 31
             pos += color_offset
             text = text[:pos] + f'\033[{color_number}m' + text[pos:pos + len(key)] + '\033[39m' + text[
                                                                                                   pos + len(
@@ -73,7 +97,7 @@ def main():
             # start = max(pos - 20, 0)
             # end = min(pos + 20, len(text))
             # print(text[start:end])
-        print(text[flattened_list[0] - 500:flattened_list[0] + 500])
+        print(text[flattened_list[0]:flattened_list[0] + 500] + '\033[39m')
 
 
 if __name__ == "__main__":
