@@ -24,10 +24,10 @@ def search(string: str, sub_string: Union[str, list[str]],
         string = string.lower()
         if isinstance(sub_string, str):
             sub_string = sub_string.lower()
-        elif isinstance(sub_string, tuple):
+        else:
             sub_string = tuple(s.lower() for s in sub_string)
 
-    def boyer_moore_horspool(text: str, pattern: str) -> Tuple[int, ...]:
+    def boyer_moore_horspool(text: str, pattern: str) -> Tuple[int, ...] | None:
         """
                 Search for a single substring in the input text using Boyer-Moore-Horspool algorithm
                 :param text: The input text to search in
@@ -92,7 +92,8 @@ def search(string: str, sub_string: Union[str, list[str]],
 
     if isinstance(sub_string, str):
         positions = boyer_moore_horspool(string, sub_string)
-    elif isinstance(sub_string, tuple):
+    # elif isinstance(sub_string, tuple):
+    else:
         positions = {sub: boyer_moore_horspool(string, sub) for sub in sub_string}
         if count is not None:
             filtered_dict = {key: value for key, value in positions.items() if value is not None}
