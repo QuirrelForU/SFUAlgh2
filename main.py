@@ -65,7 +65,7 @@ def main():
     parser.add_argument("--method", choices=["first", "last"], default="first",
                         help="Search method: 'first' or 'last'. Default is 'first'.")
     parser.add_argument("--count", type=int, help="Maximum number of matches to return. Default is None (all).")
-    parser.add_argument("--color-input", action="store_true", help="Perform additional color input in  terminal.")
+    parser.add_argument("--color-output", action="store_true", help="Perform additional color output in  terminal.")
 
     args = parser.parse_args()
 
@@ -76,29 +76,31 @@ def main():
     case_sensitivity = args.case_sensitive
     method = args.method
     count = args.count
-    color_input = args.color_input
+    color_output = args.color_output
 
     result = search(text, search_strings, case_sensitivity, method, count)
     print(result)
 
-    if result and color_input:
+    if result and color_output:
         color_offset = 0
         filtered_dict = {key: value for key, value in result.items() if value is not None}
         flattened_list = sorted([item for tup in filtered_dict.values() for item in tup])
+        firs_previous = None
+        last_previous = None
         for pos in flattened_list:
             key = find_key_by_value(filtered_dict, pos)
             seed = int(hashlib.sha256(key.encode()).hexdigest(), 16)
             color_number = seed % 6 + 31
             pos += color_offset
+
             text = text[:pos] + f'\033[{color_number}m' + text[pos:pos + len(key)] + '\033[39m' + text[
-                                                                                                  pos + len(
-                                                                                                      key):]
+                                                                                                      pos + len(
+                                                                                                          key):]
             color_offset += 10
-            # start = max(pos - 20, 0)
-            # end = min(pos + 20, len(text))
-            # print(text[start:end])
+
         print(text[flattened_list[0]:flattened_list[0] + 500] + '\033[39m')
 
 
 if __name__ == "__main__":
+    # print('\033[35mab\033[34mc\033[39mdefault_color')
     main()
