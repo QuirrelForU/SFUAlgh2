@@ -79,26 +79,29 @@ def main():
     color_output = args.color_output
 
     result = search(text, search_strings, case_sensitivity, method, count)
-    print(result)
+    #print(result)
+    formatted_output = ""
+    for key, value in result.items():
+        formatted_output += f"{key}: {value}\n"
+
+    print(formatted_output)
+
 
     if result and color_output:
-        color_offset = 0
+        colored_text = ''
+        previous_last = 0
         filtered_dict = {key: value for key, value in result.items() if value is not None}
         flattened_list = sorted([item for tup in filtered_dict.values() for item in tup])
-        firs_previous = None
-        last_previous = None
         for pos in flattened_list:
             key = find_key_by_value(filtered_dict, pos)
             seed = int(hashlib.sha256(key.encode()).hexdigest(), 16)
             color_number = seed % 6 + 31
-            pos += color_offset
+            if pos >= previous_last:
+                colored_text += text[previous_last:pos] + f'\033[{color_number}m' + text[
+                                                                                    pos:pos + len(key)] + '\033[39m'
+                previous_last = pos+len(key)
 
-            text = text[:pos] + f'\033[{color_number}m' + text[pos:pos + len(key)] + '\033[39m' + text[
-                                                                                                      pos + len(
-                                                                                                          key):]
-            color_offset += 10
-
-        print(text[flattened_list[0]:flattened_list[0] + 500] + '\033[39m')
+        print(colored_text[flattened_list[0]:flattened_list[0]+500]+'\033[39m')
 
 
 if __name__ == "__main__":
