@@ -87,7 +87,9 @@ def main():
 
     if result and color_output:
         colored_text = ''
+        color_offset = 0
         previous_last = 0
+        previous_color = 0
         filtered_dict = {key: value for key, value in result.items() if value is not None}
         flattened_list = sorted([item for tup in filtered_dict.values() for item in tup])
         for pos in flattened_list:
@@ -98,9 +100,18 @@ def main():
                 colored_text += text[previous_last:pos] + f'\033[{color_number}m' + text[
                                                                                     pos:pos + len(key)] + '\033[39m'
                 previous_last = pos + len(key)
+                color_offset += 10
+                previous_color = color_number
+            else:
+                colored_text = colored_text[:pos + color_offset - 5] + f'\033[{color_number}m' \
+                               + text[
+                                 pos:pos + len(
+                                     key)] + f'\033[{previous_color}m' + text[
+                                                                         pos + len(
+                                                                             key):previous_last] + '\033[39m'
+                color_offset += 10
+    print(colored_text[flattened_list[0]:flattened_list[0] + 500] + '\033[39m')
 
-        print(colored_text[flattened_list[0]:flattened_list[0] + 500] + '\033[39m')
-#
 
 if __name__ == "__main__":
     main()
