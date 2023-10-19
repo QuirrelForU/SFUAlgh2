@@ -100,7 +100,7 @@ def main():
                 previous_last = pos + len(key)
 
         print(colored_text[flattened_list[0]:flattened_list[0] + 500] + '\033[39m')
-
+#
 
 if __name__ == "__main__":
     main()
