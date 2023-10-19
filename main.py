@@ -79,13 +79,11 @@ def main():
     color_output = args.color_output
 
     result = search(text, search_strings, case_sensitivity, method, count)
-    #print(result)
     formatted_output = ""
     for key, value in result.items():
         formatted_output += f"{key}: {value}\n"
 
     print(formatted_output)
-
 
     if result and color_output:
         colored_text = ''
@@ -99,11 +97,10 @@ def main():
             if pos >= previous_last:
                 colored_text += text[previous_last:pos] + f'\033[{color_number}m' + text[
                                                                                     pos:pos + len(key)] + '\033[39m'
-                previous_last = pos+len(key)
+                previous_last = pos + len(key)
 
-        print(colored_text[flattened_list[0]:flattened_list[0]+500]+'\033[39m')
+        print(colored_text[flattened_list[0]:flattened_list[0] + 500] + '\033[39m')
 
 
 if __name__ == "__main__":
-    # print('\033[35mab\033[34mc\033[39mdefault_color')
     main()
